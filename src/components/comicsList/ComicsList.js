@@ -7,17 +7,19 @@ import Spinner from '../spinner/Spinner';
 const ComicsList = () => {
     const {loading, error, getComics} = useMarvelService();
     const [comicsList, setComicList] = useState([]);
+    const [offset, setOffset] = useState(210);
     
 
-    const onRequest = () => {
-        getComics()
+    const onRequest = (offset) => {
+        getComics(offset)
             .then(onComicsLoaded)
     }
     const onComicsLoaded = (newComicList) => {
         setComicList(comicsList => [...comicsList, ...newComicList]);
+        setOffset(offset + 8)
     }
     useEffect(() => {
-        onRequest();
+        onRequest(offset);
     }, [])
 
     function renderItems(arr) {
@@ -30,7 +32,7 @@ const ComicsList = () => {
                         <a href="/#/">
                             <img src={item.thumbnail} alt="ultimate war" className="comics__item-img"/>
                             <div className="comics__item-name">{item.name}</div>
-                            <div className="comics__item-price">{item.price}</div>
+                            <div className="comics__item-price">777.77$</div>
                         </a>
                 </li>
             )
@@ -50,7 +52,7 @@ const ComicsList = () => {
                 {errorMessage}
                 {spinner}
                 {items}
-            <button className="button button__main button__long">
+            <button onClick={() => onRequest(offset)} className="button button__main button__long">
                 <div className="inner">load more</div>
             </button>
         </div>
