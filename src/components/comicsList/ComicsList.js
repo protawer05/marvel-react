@@ -2,6 +2,7 @@ import './comicsList.scss';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelService';
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 import Spinner from '../spinner/Spinner';
 
 const ComicsList = () => {
@@ -27,17 +28,17 @@ const ComicsList = () => {
             return (
                 <li 
                     className="comics__item"
-                    key={item.id}
+                    key={i}
                     >
-                        <a href="/#/">
+                        <Link to={`/comics/${item.id}`}>
                             <img src={item.thumbnail} alt="ultimate war" className="comics__item-img"/>
-                            <div className="comics__item-name">{item.name}</div>
-                            <div className="comics__item-price">777.77$</div>
-                        </a>
+                            <div className="comics__item-name">{item.title}</div>
+                            <div className="comics__item-price">{item.price}</div>
+                        </Link>
                 </li>
             )
         });
-        // А эта конструкция вынесена для центровки спиннера/ошибки
+
         return (
             <ul className="comics__grid">
                 {items}

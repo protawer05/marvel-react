@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
@@ -33,6 +34,8 @@ const CharInfo = (props) =>  {
             .then(onCharLoaded)
     }
 
+    
+
 
     const skeleton = char || loading || error ? null : <Skeleton/>
     const errorMessage = error ? <ErrorMessage/> : null;
@@ -51,12 +54,17 @@ const CharInfo = (props) =>  {
 
 const View = ({char}) => {
     const {name, description, thumbnail, homepage, wiki, comics} = char;
+    const navigate = useNavigate();
 
     let imgStyle = {'objectFit' : 'cover'};
     if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
         imgStyle = {'objectFit' : 'unset'};
     }
-
+    const getComicId = (url) => {
+        const id = url.slice(-5)
+        navigate(`/comics/${id}`)
+    }
+    
     return(
         <>
         <div className="char__basics">
@@ -84,7 +92,8 @@ const View = ({char}) => {
                         if (i < 5) {
                             return (
                                 <li className="char__comics-item"
-                                key={i}>
+                                key={i}
+                                onClick={() => getComicId(item.resourceURI)}>
                                     {item.name}
                                  </li>
                             )
