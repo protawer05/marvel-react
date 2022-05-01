@@ -61,7 +61,7 @@ const View = ({char}) => {
         imgStyle = {'objectFit' : 'unset'};
     }
     const getComicId = (url) => {
-        const id = url.slice(-5)
+        const id = url.match(/\d/g).slice(1).join('');
         navigate(`/comics/${id}`)
     }
     
