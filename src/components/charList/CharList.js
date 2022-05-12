@@ -1,5 +1,6 @@
 import {useState, useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
+import { CSSTransition, TransitionGroup} from 'react-transition-group';
 
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -41,20 +42,12 @@ const CharList = (props) => {
     const itemRefs = useRef([]);
 
     const focusOnItem = (id) => {
-        // Я реализовал вариант чуть сложнее, и с классом и с фокусом
-        // Но в теории можно оставить только фокус, и его в стилях использовать вместо класса
-        // На самом деле, решение с css-классом можно сделать, вынеся персонажа
-        // в отдельный компонент. Но кода будет больше, появится новое состояние
-        // и не факт, что мы выиграем по оптимизации за счет бОльшего кол-ва элементов
 
-        // По возможности, не злоупотребляйте рефами, только в крайних случаях
         itemRefs.current.forEach(item => item.classList.remove('char__item_selected'));
         itemRefs.current[id].classList.add('char__item_selected');
         itemRefs.current[id].focus();
     }
 
-    // Этот метод создан для оптимизации, 
-    // чтобы не помещать такую конструкцию в метод render
     function renderItems(arr) {
         const items =  arr.map((item, i) => {
             let imgStyle = {'objectFit' : 'cover'};
@@ -63,6 +56,7 @@ const CharList = (props) => {
             }
             
             return (
+                <CSSTransition timeout={1000} classNames={"char__transition"}>
                 <li 
                     className="char__item"
                     tabIndex={0}
@@ -78,16 +72,17 @@ const CharList = (props) => {
                             focusOnItem(i);
                         }
                     }}>
-                        <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
-                        <div className="char__name">{item.name}</div>
+                            <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
+                            <div className="char__name">{item.name}</div>
                 </li>
+                </CSSTransition>
             )
         });
         // А эта конструкция вынесена для центровки спиннера/ошибки
         return (
-            <ul className="char__grid">
+            <TransitionGroup className="char__grid">
                 {items}
-            </ul>
+            </TransitionGroup>
         )
     }
     
